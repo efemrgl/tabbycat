@@ -32,4 +32,8 @@ RUN npm ci
 # Compile all the static files
 RUN npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0
-RUN python ./tabbycat/manage.py migrate
+
+ENV PORT=8000
+EXPOSE 8000
+
+CMD bash -c "python ./tabbycat/manage.py migrate && gunicorn tabbycat.wsgi:application --bind 0.0.0.0:$PORT"
