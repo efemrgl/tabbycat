@@ -16,7 +16,7 @@ RUN apt-get install -y curl nginx
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 # Copy all our files into the baseimage and cd to that directory
-WORKDIR /tcd
+WORKDIR /tcd/tabbycat
 COPY . /tcd/
 
 RUN nvm install && nvm use
@@ -31,10 +31,10 @@ RUN npm ci
 
 # Compile all the static files
 RUN npm run build
-RUN python ./tabbycat/manage.py collectstatic --noinput -v 0
+RUN python manage.py collectstatic --noinput -v 0
 
 ENV PORT=8000
 EXPOSE 8000
 
-CMD python ./tabbycat/manage.py migrate && \
+CMD python manage.py migrate && \
     gunicorn tabbycat.wsgi:application --bind 0.0.0.0:$PORT --workers 2
