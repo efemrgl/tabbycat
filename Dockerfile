@@ -32,3 +32,4 @@ RUN npm ci
 # Compile all the static files
 RUN npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0
+RUN python ./tabbycat/manage.py migrate
